@@ -1,0 +1,151 @@
+on: ["push", "pull_request"]
+
+name: Test
+
+jobs:
+    linting:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+              python-version: 3.9
+
+        - name: Install Poetry
+          uses: snok/install-poetry@v1
+          with:
+            virtualenvs-path: ~/.virtualenvs
+
+        - name: Cache Poetry virtualenv
+          uses: actions/cache@v2
+          id: cache
+          with:
+            path: ~/.virtualenvs
+            key: poetry-${{ hashFiles('**/poetry.lock') }}
+            restore-keys: |
+              poetry-${{ hashFiles('**/poetry.lock') }}
+
+        - name: Set Poetry config
+          run: |
+            poetry config virtualenvs.in-project false
+            poetry config virtualenvs.path ~/.virtualenvs
+
+        - name: Install Dependencies
+          run: |
+            cd johnson_website/backend/app
+            poetry install
+          if: steps.cache.outputs.cache-hit != 'true'
+
+        - name: Run Black
+          run: |
+            cd johnson_website/backend/app
+            poetry run black --check .
+
+        - name: Run flake8
+          run: |
+            cd johnson_website/backend/app
+            poetry run flake8 .
+
+        - name: Run isort
+          run: |
+            cd johnson_website/backend/app
+            poetry run isort --check-only .
+
+    type-check:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+              python-version: 3.9
+
+        - name: Install Poetry
+          uses: snok/install-poetry@v1
+          with:
+            virtualenvs-path: ~/.virtualenvs
+
+        - name: Cache Poetry virtualenv
+          uses: actions/cache@v2
+          id: cache
+          with:
+            path: ~/.virtualenvs
+            key: poetry-${{ hashFiles('**/poetry.lock') }}
+            restore-keys: |
+              poetry-${{ hashFiles('**/poetry.lock') }}
+
+        - name: Set Poetry config
+          run: |
+            poetry config virtualenvs.in-project false
+            poetry config virtualenvs.path ~/.virtualenvs
+
+        - name: Install Dependencies
+          run: |
+            cd johnson_website/backend/app
+            poetry install
+          if: steps.cache.outputs.cache-hit != 'true'
+
+        - name: Run MyPy
+          run: |
+            cd johnson_website/backend/app
+            poetry run mypy .
+
+    functional:
+      runs-on: ubuntu-latest
+
+      env:
+        DOMAIN: localhost
+        SERVER_HOST: 'http://localhost'
+        SERVER_NAME: ''
+        STACK_NAME: johnson-website-com
+        TRAEFIK_PUBLIC_NETWORK: traefik-public
+        TRAEFIK_TAG: johnson-website.com
+        TRAEFIK_PUBLIC_TAG: johnson-website.com
+        DOCKER_IMAGE_BACKEND: backend
+        DOCKER_IMAGE_CELERYWORKER: celeryworker
+        DOCKER_IMAGE_FRONTEND: frontend
+        BACKEND_CORS_ORIGINS: '["http://localhost"]'
+        PROJECT_NAME: JohnsonWebsite
+        SECRET_KEY: 6c4ceaaa94d42eac1cc9d87d165f54d15a3b1b11506b006a8fac66be66d124e4
+        FIRST_SUPERUSER: admin@johnson-website.io
+        FIRST_SUPERUSER_PASSWORD: password
+        SMTP_TLS: True
+        SMTP_PORT: 587
+        SMTP_HOST: None
+        SMTP_USER: None
+        SMTP_PASSWORD: None
+        EMAILS_FROM_EMAIL: info@johnson-website.io
+        USERS_OPEN_REGISTRATION: False
+        SENTRY_DSN: ''
+        FLOWER_BASIC_AUTH: admin:password
+        POSTGRES_SERVER: johnson-website-postgresdb
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: app
+        PGADMIN_LISTEN_PORT: 5050
+        PGADMIN_DEFAULT_EMAIL: admin@johnson-website.io
+        PGADMIN_DEFAULT_PASSWORD: password
+        MONGO_URL: mongodb
+        MONGO_PORT: 27017
+        MONGO_DATABASE_URI: mongodb://localhost:27017
+
+      steps:
+        - uses: actions/checkout@v2
+#          actions/setup-node@v1
+#          with:
+#            node-version: 17.5.0
+
+        - name: Build the stack
+          run: |
+            cd johnson_website
+            docker-compose up -d
+
+        - name: Run Tests
+          run: |
+            cd johnson_website
+            sh ./scripts/test.sh

@@ -1,0 +1,47 @@
+on: push
+
+name: Commit Message
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v2
+          with:
+              fetch-depth: 0
+
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+              python-version: 3.9
+
+        - name: Install Poetry
+          uses: snok/install-poetry@v1
+          with:
+            virtualenvs-path: ~/.virtualenvs
+
+        - name: Cache Poetry virtualenv
+          uses: actions/cache@v2
+          id: cache
+          with:
+            path: ~/.virtualenvs
+            key: poetry-${{ hashFiles('**/poetry.lock') }}
+            restore-keys: |
+              poetry-${{ hashFiles('**/poetry.lock') }}
+
+        - name: Set Poetry config
+          run: |
+            poetry config virtualenvs.in-project false
+            poetry config virtualenvs.path ~/.virtualenvs
+
+        - name: Install Dependencies
+          run: |
+            cd johnson_website/backend/app
+            poetry install
+          if: steps.cache.outputs.cache-hit != 'true'
+
+        - name: Check commit history
+          run: |
+            cd johnson_website/backend/app
+            poetry run cz check --rev-range $(git rev-list --all --reverse | head -1)..HEAD
