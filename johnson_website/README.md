@@ -1,4 +1,4 @@
-# Async FastAPI
+# Johnson Portfolio Website
 
 This project is a base for an Asynchronous FastAPI project
 
@@ -33,13 +33,13 @@ PyCharm and the PyCharm Debugger, while also giving you the capacity to hot-relo
 * Go to File > Settings > Build, Execution, Deployment > Console > Python Console
   * Note: Python Console is in the dropdown of Console not actually inside of Console
 
-* Set your working directory as /home/User/path/to/AsyncFastAPI/async_fastapi/backend/app
+* Set your working directory as /home/User/path/to/JohnsonWebsite/johnson_website/backend/app
 
 * Go to Select Run/Debug Configuration and choose Edit Configurations
   * Add a new environment and choose FastAPI as your configuration
-  * Set your Application file to /home/User/path/to/AsyncFastAPI/async_fastapi/backend/app/app/main.py
-  * Set your working directory as /home/User/path/to/AsyncFastAPI/async_fastapi/backend/app
-  * Set all of your Environment Variables (Most of these come from the async-fastapi-config-file.yml)
+  * Set your Application file to /home/User/path/to/JohnsonWebsite/johnson_website/backend/app/app/main.py
+  * Set your working directory as /home/User/path/to/JohnsonWebsite/johnson_website/backend/app
+  * Set all of your Environment Variables (Most of these come from the johnson-website-config-file.yml)
 
 * Run the play button, if it fails, add the environment variable(s) that are missing until it runs
 

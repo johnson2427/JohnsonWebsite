@@ -1,14 +1,14 @@
-# AsyncFastAPI Full Stack Project
+# Johnson Portfolio Website Full Stack Project
 
 Generate a backend and frontend stack using Python, including interactive API documentation.
 
 ### Interactive API documentation
 
-[![API docs](./img/docs.png)](https://github.com/johnson2427/AsyncFastAPI)
+[![API docs](./img/docs.png)](https://github.com/johnson2427/JohnsonWebsite)
 
 ### Alternative API documentation
 
-[![API docs](./img/redoc.png)](https://github.com/johnson2427/AsyncFastAPI)
+[![API docs](./img/redoc.png)](https://github.com/johnson2427/JohnsonWebsite)
 
 ## Features
 
@@ -65,7 +65,7 @@ Please refer to <a href="https://dockerswarm.rocks" target="_blank">DockerSwarm.
 
 ## More details
 
-After using this generator, your new project (the directory created) will contain an extensive `README.md` with instructions for development, deployment, etc. You can pre-read [the project `README.md` template here too](../AsyncFastAPI/%7B%7Bcookiecutter.project_slug%7D%7D/README.md).
+After using this generator, your new project (the directory created) will contain an extensive `README.md` with instructions for development, deployment, etc. You can pre-read [the project `README.md` template here too](../JohnsonWebsite/%7B%7Bcookiecutter.project_slug%7D%7D/README.md).
 
 ## Release Notes
 
